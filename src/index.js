@@ -9,39 +9,63 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      resistance: 1000,
+      resistance: 10,
       numOfBands: 4,
       tolerance: 5,
       currentBand: 0
     };
+    this.textChangeCallback = this.textChangeCallback.bind(this);
+    this.handleBandCountChange = this.handleBandCountChange.bind(this);
   }
-  textUpdateCallBack(data) {
-    this.setState({
-      resistance: data
-    });
+  // Update when user inputs numbers in text box
+  textChangeCallback(textData) {
+    this.setState({ resistance: textData });
+  }
+  // Update when user selects band count from dragdown box
+  handleBandCountChange(event) {
+    this.setState({ numOfBands: event.target.value });
   }
   render() {
     return (
       <div>
         <h1>React Resistor Color Code Calculator</h1>
-        <TextField />
-        <ResistorDisplay />
-        <div>
-          <BandCountInput />
-          <ColorPicker />
-        </div>
+        <TextField
+          value={this.state.resistance}
+          onTextChange={this.textChangeCallback}
+        />
+        <ResistorDisplay
+          value={this.state.resistance}
+          numOfBands={this.state.numOfBands}
+          currentBand={this.state.currentBand}
+        />
+        Number of bands:
+        <select onChange={this.handleBandCountChange}>
+          <option>3</option>
+          <option selected>4</option>
+          <option>5</option>
+          <option>6</option>
+        </select>
+        <ColorPicker />
       </div>
     );
   }
 }
 
 // Updates to show numerical resistance value
+// User input automatically updates
 class TextField extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    this.props.onTextChange(e.target.value);
+  }
   render() {
     return (
       <div>
         <h2>Resistance</h2>
-        <input />
+        <input value={this.props.value} onChange={this.handleChange} />
       </div>
     );
   }
@@ -50,21 +74,11 @@ class TextField extends Component {
 // Render resistor display and enable selecting bands
 class ResistorDisplay extends Component {
   render() {
-    return <div>Display resistor here with interactivity</div>;
-  }
-}
-
-class BandCountInput extends Component {
-  render() {
     return (
-      <div>
-        Number of bands:
-        <select name="bandCount">
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </select>
+      <div style={{ border: "solid black 3px" }}>
+        Resistance: {this.props.value}
+        <br />
+        Band: {this.props.currentBand + 1}/{this.props.numOfBands}
       </div>
     );
   }
