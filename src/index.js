@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./index.scss";
 //import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
@@ -11,7 +11,8 @@ class App extends Component {
     this.state = {
       resistance: 10,
       numOfBands: 4,
-      tolerance: 5
+      tolerance: 5,
+      currentBand: 0
     };
     this.textChangeCallback = this.textChangeCallback.bind(this);
     this.handleBandCountChange = this.handleBandCountChange.bind(this);
@@ -26,8 +27,8 @@ class App extends Component {
   }
   render() {
     return (
-      <div>
-        <h1>React Resistor Color Code Calculator</h1>
+      <div className="App">
+        <h1 className="App-Title">React Resistor Color Code Calculator</h1>
         <TextField
           value={this.state.resistance}
           onTextChange={this.textChangeCallback}
@@ -35,14 +36,17 @@ class App extends Component {
         <ResistorDisplay
           value={this.state.resistance}
           numOfBands={this.state.numOfBands}
+          currentBand={this.state.currentBand}
         />
-        Number of bands:
-        <select onChange={this.handleBandCountChange}>
-          <option>3</option>
-          <option selected>4</option>
-          <option>5</option>
-          <option>6</option>
-        </select>
+        <div className="BandCountSelector">
+          <h2>Number of bands:</h2>
+          <select onChange={this.handleBandCountChange}>
+            <option>3</option>
+            <option selected>4</option>
+            <option>5</option>
+            <option>6</option>
+          </select>
+        </div>
         <ColorPicker
           numOfBands={this.state.numOfBands}
           value={this.state.resistance}
@@ -64,9 +68,14 @@ class TextField extends Component {
   }
   render() {
     return (
-      <div>
-        <h2>Resistance</h2>
-        <input value={this.props.value} onChange={this.handleChange} />
+      <div className="TextField">
+        <h2 className="TextField-Heading">Resistance</h2>
+        <input
+          className="TextField-Input"
+          value={this.props.value}
+          onChange={this.handleChange}
+        />{" "}
+        &#8486;
       </div>
     );
   }
@@ -76,7 +85,7 @@ class TextField extends Component {
 class ResistorDisplay extends Component {
   render() {
     return (
-      <div style={{ border: "solid black 3px" }}>
+      <div className="ResistorDisplay">
         Resistance: {this.props.value}
         <br />
         Bands: {this.props.numOfBands}
@@ -88,7 +97,7 @@ class ResistorDisplay extends Component {
 // User choose resistor colors
 class ColorPicker extends Component {
   render() {
-    return <div>Pick colors here</div>;
+    return <div className="ColorPicker">Pick colors here</div>;
   }
 }
 
