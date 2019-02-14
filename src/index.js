@@ -11,8 +11,7 @@ class App extends Component {
     this.state = {
       resistance: 10,
       numOfBands: 4,
-      tolerance: 5,
-      currentBand: 0
+      tolerance: 5
     };
     this.textChangeCallback = this.textChangeCallback.bind(this);
     this.handleBandCountChange = this.handleBandCountChange.bind(this);
@@ -36,7 +35,6 @@ class App extends Component {
         <ResistorDisplay
           value={this.state.resistance}
           numOfBands={this.state.numOfBands}
-          currentBand={this.state.currentBand}
         />
         Number of bands:
         <select onChange={this.handleBandCountChange}>
@@ -45,7 +43,10 @@ class App extends Component {
           <option>5</option>
           <option>6</option>
         </select>
-        <ColorPicker />
+        <ColorPicker
+          numOfBands={this.state.numOfBands}
+          value={this.state.resistance}
+        />
       </div>
     );
   }
@@ -78,7 +79,7 @@ class ResistorDisplay extends Component {
       <div style={{ border: "solid black 3px" }}>
         Resistance: {this.props.value}
         <br />
-        Band: {this.props.currentBand + 1}/{this.props.numOfBands}
+        Bands: {this.props.numOfBands}
       </div>
     );
   }
