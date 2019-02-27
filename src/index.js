@@ -98,25 +98,36 @@ class ResistorDisplay extends Component {
   render() {
     // Code to remove whitespace is repeated here to fix a bug with this component showing whitespace anyways
     const resistanceString = this.props.value.replace(/\s/g, "");
-
-    // Valid input
-    if (resistanceString.match(validUserInputRegEx)) {
-    }
+    let actualResistance = parseSIPrefix(resistanceString);
     return (
       <div className="ResistorDisplayBox">
         <div className="DisplayResistanceValue">
-          Resistance: {resistanceString}&#937; &#177;
+          Resistance: {actualResistance}&#937; &#177;
           {this.props.tolerance}%
         </div>
         <div className="ResistorBody">
           <div className="wire wire-left" />
           <div className="wire wire-right" />
-          <div className="band1" />
-          <div className="band2" />
-          {this.props.numOfBands >= 3 ? <div className="band3" /> : null}
-          {this.props.numOfBands >= 4 ? <div className="band4" /> : null}
-          {this.props.numOfBands >= 5 ? <div className="band5" /> : null}
-          {this.props.numOfBands >= 6 ? <div className="band6" /> : null}
+          {/* Digit 1 */}
+          <div className="band band1" style={bandColor(0, 2)} />
+          {/* Digit 2 */}
+          <div className="band band2" style={bandColor(1, 0)} />
+          {/* Multiplier */}
+          {this.props.numOfBands >= 3 ? (
+            <div className="band band3" style={bandColor(2, 0)} />
+          ) : null}
+          {/* Tolerance */}
+          {this.props.numOfBands >= 4 ? (
+            <div className="band band4" style={bandColor(3, 5)} />
+          ) : null}
+          {/* Digit 3 */}
+          {this.props.numOfBands >= 5 ? (
+            <div className="band band5" style={bandColor(4, 6)} />
+          ) : null}
+          {/* Temperature Coefficient */}
+          {this.props.numOfBands >= 6 ? (
+            <div className="band band6" style={bandColor(5, 100)} />
+          ) : null}
         </div>
       </div>
     );
@@ -140,7 +151,8 @@ class ColorPicker extends Component {
     return (
       <div className="ColorPicker">
         <div className="ColorPicker-Title">
-          Selected Band:{" "}
+          Selected Band:
+          <br />
           {
             // Display current band selected
             this.bandString[this.props.currentBand]
@@ -151,33 +163,125 @@ class ColorPicker extends Component {
   }
 }
 
-class ResistorBody extends Component {
-  render() {
-    switch (this.props.numOfBands) {
-      case 3:
-        return <div />;
-      case 4:
-        return (
-          <div className="ResistorBody">
-            <div className="band1" />
-            <div className="band2" />
-            <div className="band3" />
-            <div className="band4" />
-          </div>
-        );
-      case 5:
-        return <div />;
-      case 6:
-        return <div />;
-      default:
-        return <div>Number of bands invalid</div>;
-    }
-  }
-}
-
 ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+function bandColor(bandNum, value) {
+  let color = "";
+  switch (bandNum) {
+    case 0:
+    case 1:
+    case 2:
+    case 4:
+      // Digit band colors
+      switch (value) {
+        case 0:
+          color = "black";
+          break;
+        case 1:
+          color = "brown";
+          break;
+        case 2:
+          color = "red";
+          break;
+        case 3:
+          color = "orange";
+          break;
+        case 4:
+          color = "yellow";
+          break;
+        case 5:
+          color = "green";
+          break;
+        case 6:
+          color = "blue";
+          break;
+        case 7:
+          color = "violet";
+          break;
+        case 8:
+          color = "grey";
+          break;
+        case 9:
+          color = "white";
+          break;
+        default:
+          break;
+      }
+      break;
+    // Tolerance band colors
+    case 3:
+      switch (value) {
+        case 10:
+          color = "silver";
+          break;
+        case 5:
+          color = "gold";
+          break;
+        case 1:
+          color = "brown";
+          break;
+        case 2:
+          color = "red";
+          break;
+        case 0.5:
+          color = "green";
+          break;
+        case 0.25:
+          color = "blue";
+          break;
+        case 0.1:
+          color = "violet";
+          break;
+        default:
+          break;
+      }
+      break;
+    // Temperature coefficient
+    case 5:
+      switch (value) {
+        case 100:
+          color = "brown";
+          break;
+        case 50:
+          color = "red";
+          break;
+        case 15:
+          color = "orange";
+          break;
+        case 25:
+          color = "yellow";
+          break;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+  return { backgroundColor: color };
+}
+function parseSIPrefix(resistanceString) {
+  let actualResistance;
+  if (resistanceString.match(validUserInputRegEx)) {
+    switch (resistanceString.substr(-1)) {
+      case "k":
+        actualResistance = parseFloat(resistanceString.slice(0, -1)) * 1000;
+        break;
+      case "m":
+        actualResistance = parseFloat(resistanceString.slice(0, -1)) / 1000;
+        break;
+      case "M":
+        actualResistance = parseFloat(resistanceString.slice(0, -1)) * 1000000;
+        break;
+      default:
+        actualResistance = parseFloat(resistanceString);
+        break;
+    }
+  }
+  return actualResistance;
+}

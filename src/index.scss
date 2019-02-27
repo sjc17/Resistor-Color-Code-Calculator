@@ -103,21 +103,55 @@ code {
   margin: auto;
   margin-top: 4 * $margin-side;
   position: relative;
-}
 
-.wire {
-  width: $wire-length;
-  height: $wire-width;
-  background-color: grey;
-  position: absolute;
+  .wire {
+    width: $wire-length;
+    height: $wire-width;
+    background-color: grey;
+    position: absolute;
 
-  &-left {
-    left: -$wire-length;
-    top: 50% - $wire-width/2;
+    &-left {
+      left: -$wire-length;
+      top: 50% - $wire-width/2;
+    }
+    &-right {
+      right: -$wire-length;
+      top: 50% - $wire-width/2;
+    }
   }
-  &-right {
-    right: -$wire-length;
-    top: 50% - $wire-width/2;
+
+  .band {
+    height: 100%;
+    width: 5%;
+    position: absolute;
+    margin-top: 0px;
+    &:hover {
+      cursor: pointer;
+    }
+    &1 {
+      background-color: red;
+      margin-left: 8%;
+    }
+    &2 {
+      background-color: orange;
+      margin-left: 20%;
+    }
+    &3 {
+      background-color: yellow;
+      margin-left: 44%;
+    }
+    &4 {
+      background-color: gold;
+      margin-left: 85%;
+    }
+    &5 {
+      background-color: green;
+      margin-left: 32%;
+    }
+    &6 {
+      background-color: blue;
+      margin-left: 60%;
+    }
   }
 }
 
