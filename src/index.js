@@ -104,11 +104,13 @@ class ResistorDisplay extends Component {
     }
     return (
       <div className="ResistorDisplayBox">
-        Resistance: {resistanceString}&#937; &#177;
-        {this.props.tolerance}%
-        <br />
-        Bands: {this.props.numOfBands}
+        <div className="DisplayResistanceValue">
+          Resistance: {resistanceString}&#937; &#177;
+          {this.props.tolerance}%
+        </div>
         <div className="ResistorBody">
+          <div className="wire wire-left" />
+          <div className="wire wire-right" />
           <div className="band1" />
           <div className="band2" />
           {this.props.numOfBands >= 3 ? <div className="band3" /> : null}
@@ -150,9 +152,6 @@ class ColorPicker extends Component {
 }
 
 class ResistorBody extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     switch (this.props.numOfBands) {
       case 3:
