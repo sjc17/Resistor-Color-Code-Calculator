@@ -55,7 +55,7 @@ class ResistorDisplay extends Component {
     // Two digit bands
     if (this.props.numOfBands <= 4) {
       if (multiplier !== 0.1 && multiplier !== 0.01) {
-        if (number >= 100) index = 2;
+        if (number >= 100) index = 1;
         else index = 1;
       } else if (multiplier === 0.1) index = 2;
       else if (multiplier === 0.01) index = 3;
@@ -89,16 +89,17 @@ class ResistorDisplay extends Component {
     const resistanceString = this.props.value.replace(/\s/g, "");
     let actualResistance = 0;
     if (resistanceString.match(validUserInputRegEx)) {
-      actualResistance = parseFloat(
-        parseSIPrefix(resistanceString)
-      ).toPrecision(this.props.numOfBands <= 4 ? 2 : 3);
+      actualResistance = parseFloat(parseSIPrefix(resistanceString)).toFixed(2);
+      // Check that the resistance value is valid
       if (
-        this.props.numOfBands >= 5 &&
-        (actualResistance >= 0.01 && actualResistance <= 9990 * Math.pow(10, 6))
+        actualResistance >= 0.01 &&
+        ((this.props.numOfBands <= 4 && actualResistance <= 990 * 1000000) ||
+          (this.props.numOfBands >= 5 && actualResistance <= 9990 * 1000000))
       ) {
+        // Do nothing
       } else {
-        // actualResistance = 0;
-        // alert("Not valid number");
+        // Set invalid value to 0
+        actualResistance = 0;
       }
     }
     return (
@@ -112,30 +113,53 @@ class ResistorDisplay extends Component {
           <div className="wire wire-right" />
           {/* Digit 1 */}
           <div
-            className="band band1"
-            style={bandColor(0, this.getFirstDigit(actualResistance))}
+            className="ResistorBand ResistorBand1"
+            style={{
+              backgroundColor: bandColor(
+                0,
+                this.getFirstDigit(actualResistance)
+              )
+            }}
           />
           {/* Digit 2 */}
           <div
-            className="band band2"
-            style={bandColor(1, this.getSecondDigit(actualResistance))}
+            className="ResistorBand ResistorBand2"
+            style={{
+              backgroundColor: bandColor(
+                1,
+                this.getSecondDigit(actualResistance)
+              )
+            }}
           />
           {/* Multiplier */}
           {this.props.numOfBands >= 3 ? (
             <div
-              className="band band3"
-              style={bandColor(2, this.getMultiplier(actualResistance))}
+              className="ResistorBand ResistorBand3"
+              style={{
+                backgroundColor: bandColor(
+                  2,
+                  this.getMultiplier(actualResistance)
+                )
+              }}
             />
           ) : null}
           {/* Tolerance */}
           {this.props.numOfBands >= 4 ? (
-            <div className="band band4" style={bandColor(3, 5)} />
+            <div
+              className="ResistorBand ResistorBand4"
+              style={{ backgroundColor: bandColor(3, 5) }}
+            />
           ) : null}
           {/* Digit 3 */}
           {this.props.numOfBands >= 5 ? (
             <div
-              className="band band5"
-              style={bandColor(4, this.getThirdDigit(actualResistance))}
+              className="ResistorBand ResistorBand5"
+              style={{
+                backgroundColor: bandColor(
+                  4,
+                  this.getThirdDigit(actualResistance)
+                )
+              }}
             />
           ) : null}
         </div>
@@ -255,7 +279,7 @@ function bandColor(bandNum, value) {
     default:
       break;
   }
-  return { backgroundColor: color };
+  return color;
 }
 
 function parseSIPrefix(resistanceString) {

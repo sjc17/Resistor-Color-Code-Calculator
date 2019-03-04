@@ -14,7 +14,7 @@ class App extends Component {
       resistance: "10", // resistance state will match text input box exactly
       numOfBands: 4,
       tolerance: 5,
-      currentBand: 0
+      currentBand: 2
     };
     this.textChangeCallback = this.textChangeCallback.bind(this);
     this.handleBandCountChange = this.handleBandCountChange.bind(this);
