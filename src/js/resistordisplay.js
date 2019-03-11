@@ -120,6 +120,9 @@ class ResistorDisplay extends Component {
                 this.getFirstDigit(actualResistance)
               )
             }}
+            onClick={() => {
+              this.props.bandSelect(0);
+            }}
           />
           {/* Digit 2 */}
           <div
@@ -129,6 +132,9 @@ class ResistorDisplay extends Component {
                 1,
                 this.getSecondDigit(actualResistance)
               )
+            }}
+            onClick={() => {
+              this.props.bandSelect(1);
             }}
           />
           {/* Multiplier */}
@@ -141,6 +147,9 @@ class ResistorDisplay extends Component {
                   this.getMultiplier(actualResistance)
                 )
               }}
+              onClick={() => {
+                this.props.bandSelect(2);
+              }}
             />
           ) : null}
           {/* Tolerance */}
@@ -148,6 +157,9 @@ class ResistorDisplay extends Component {
             <div
               className="ResistorBand ResistorBand4"
               style={{ backgroundColor: bandColor(3, 5) }}
+              onClick={() => {
+                this.props.bandSelect(3);
+              }}
             />
           ) : null}
           {/* Digit 3 */}
@@ -159,6 +171,9 @@ class ResistorDisplay extends Component {
                   4,
                   this.getThirdDigit(actualResistance)
                 )
+              }}
+              onClick={() => {
+                this.props.bandSelect(4);
               }}
             />
           ) : null}

@@ -5,6 +5,7 @@ import * as serviceWorker from "./js/serviceWorker";
 import TextField from "./js/textfield";
 import ResistorDisplay from "./js/resistordisplay";
 import ColorPicker from "./js/colorpicker";
+import { EventEmitter } from "events";
 
 // Whole app container
 class App extends Component {
@@ -14,7 +15,7 @@ class App extends Component {
       resistance: "10", // resistance state will match text input box exactly
       numOfBands: 4,
       tolerance: 5,
-      currentBand: 2
+      currentBand: 0
     };
     this.textChangeCallback = this.textChangeCallback.bind(this);
     this.handleBandCountChange = this.handleBandCountChange.bind(this);
@@ -28,8 +29,8 @@ class App extends Component {
   handleBandCountChange(event) {
     this.setState({ numOfBands: event.target.value, currentBand: 0 });
   }
-  handleBandSelect(event) {
-    this.setState({ currentBand: event.target.value });
+  handleBandSelect(value) {
+    this.setState({ currentBand: value });
   }
   render() {
     return (
@@ -44,6 +45,7 @@ class App extends Component {
           numOfBands={this.state.numOfBands}
           currentBand={this.state.currentBand}
           tolerance={this.state.tolerance}
+          bandSelect={this.handleBandSelect}
         />
         <div className="BandCountSelector">
           <h2>Number of bands:</h2>
