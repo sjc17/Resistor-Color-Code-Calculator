@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import rMath from "./resistancestringmath";
+import RMath from "./resistancestringmath";
 
 const validUserInputRegEx = /^\d*\.?\d*[mkM]?$/; // Regex to check that input is a valid decimal number
 // Render resistor display and enable selecting bands
@@ -10,7 +10,7 @@ class ResistorDisplay extends Component {
     let actualResistance = 0;
     if (resistanceString.match(validUserInputRegEx)) {
       actualResistance = parseFloat(
-        rMath.parseSIPrefix(resistanceString)
+        RMath.parseSIPrefix(resistanceString)
       ).toFixed(2);
       // Check that the resistance value is valid
       if (
@@ -39,7 +39,7 @@ class ResistorDisplay extends Component {
             style={{
               backgroundColor: bandColor(
                 0,
-                rMath.getDigit(actualResistance, this.props.numOfBands, 0)
+                RMath.getDigit(actualResistance, this.props.numOfBands, 0)
               )
             }}
             onClick={() => {
@@ -52,7 +52,7 @@ class ResistorDisplay extends Component {
             style={{
               backgroundColor: bandColor(
                 1,
-                rMath.getDigit(actualResistance, this.props.numOfBands, 1)
+                RMath.getDigit(actualResistance, this.props.numOfBands, 1)
               )
             }}
             onClick={() => {
@@ -66,7 +66,7 @@ class ResistorDisplay extends Component {
               style={{
                 backgroundColor: bandColor(
                   2,
-                  rMath.getMultiplier(actualResistance, this.props.numOfBands)
+                  RMath.getMultiplier(actualResistance, this.props.numOfBands)
                 )
               }}
               onClick={() => {
@@ -91,7 +91,7 @@ class ResistorDisplay extends Component {
               style={{
                 backgroundColor: bandColor(
                   4,
-                  rMath.getDigit(actualResistance, this.props.numOfBands, 2)
+                  RMath.getDigit(actualResistance, this.props.numOfBands, 2)
                 )
               }}
               onClick={() => {

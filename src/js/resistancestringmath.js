@@ -89,10 +89,7 @@ const funcs = {
     const multiplier = this.getMultiplier(number, bandCount);
     let index;
     // Three digit bands
-    if (number >= 1000) index = 3;
-    else if (multiplier !== 0.1 && multiplier !== 0.01) index = 2;
-    else if (multiplier === 0.1) index = 3;
-    else if (number >= 1) index = 3;
+    if (multiplier !== 0.1 && multiplier !== 0.01) index = 2;
     else if (number > 0) index = 3;
     else return 0;
     return index;
@@ -118,6 +115,37 @@ const funcs = {
       }
     }
     return actualResistance;
+  },
+
+  replaceDigit(numberString, bandCount, index, newDigit) {
+    // parse SI prefix and round to 2 decimal places
+    const actualNumberString = parseFloat(this.parseSIPrefix(numberString))
+      .toFixed(2)
+      .toString();
+    console.log(actualNumberString);
+    let finalIndex;
+
+    switch (index) {
+      case 0:
+        finalIndex = this.getFirstDigitIndex(actualNumberString, bandCount);
+        break;
+      case 1:
+        finalIndex = this.getSecondDigitIndex(actualNumberString, bandCount);
+        break;
+      case 4:
+        finalIndex = this.getThirdDigitIndex(actualNumberString, bandCount);
+        break;
+      default:
+        break;
+    }
+    const replacedDigitString =
+      actualNumberString.substr(0, finalIndex) +
+      newDigit.toString() +
+      actualNumberString.substr(
+        finalIndex + 1,
+        finalIndex + actualNumberString.length
+      );
+    return replacedDigitString;
   }
 };
 export default funcs;

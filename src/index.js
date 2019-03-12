@@ -5,6 +5,7 @@ import * as serviceWorker from "./js/serviceWorker";
 import TextField from "./js/textfield";
 import ResistorDisplay from "./js/resistordisplay";
 import ColorPicker from "./js/colorpicker";
+import RMath from "./js/resistancestringmath";
 
 // Whole app container
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
     this.textChangeCallback = this.textChangeCallback.bind(this);
     this.handleBandCountChange = this.handleBandCountChange.bind(this);
     this.handleBandSelect = this.handleBandSelect.bind(this);
+    this.handleColorSelect = this.handleColorSelect.bind(this);
   }
   // Update when user inputs numbers or SI prefixes in text box
   textChangeCallback(textData) {
@@ -30,6 +32,15 @@ class App extends Component {
   }
   handleBandSelect(value) {
     this.setState({ currentBand: value });
+  }
+  handleColorSelect(value) {
+    const newResistance = RMath.replaceDigit(
+      this.state.resistance,
+      this.state.numOfBands,
+      this.state.currentBand,
+      value
+    );
+    this.setState({ resistance: newResistance });
   }
   render() {
     return (
@@ -55,7 +66,7 @@ class App extends Component {
           </select>
         </div>
         <ColorPicker
-          onSelect={this.handleBandSelect}
+          colorSelect={this.handleColorSelect}
           currentBand={this.state.currentBand}
           value={this.state.resistance}
         />

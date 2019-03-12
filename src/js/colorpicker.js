@@ -13,6 +13,37 @@ class ColorPicker extends Component {
     ];
   }
   render() {
+    // Returns array of JSX divs showing the color bands to click on
+
+    let array = []; // array to hold divs for each band
+    let style = {}; // Object to hold CSS for each band
+
+    let bandCount;
+    // Tolerance band has 8 only
+    if (this.props.currentBand === 3) bandCount = 8;
+    else bandCount = 10; // All other bands have 10
+
+    for (let i = 0; i < bandCount; i++) {
+      // White text for black band
+      style = {
+        backgroundColor: bandColor(this.props.currentBand, i),
+        marginTop: "0%"
+      };
+      if (bandColor(this.props.currentBand, i) === "black") {
+        style.color = "white";
+      }
+      array.push(
+        <div
+          style={style}
+          className="ColorPicker-Band"
+          onClick={() => {
+            this.props.colorSelect(i);
+          }}
+        >
+          {bandContent(this.props.currentBand, i)}
+        </div>
+      );
+    }
     return (
       <div className="ColorPicker">
         <div className="ColorPicker-Title">
@@ -20,49 +51,13 @@ class ColorPicker extends Component {
           {// Display current band selected
           " " + this.bandString[this.props.currentBand]}
         </div>
-        <div className="ColorPicker-BandsParent">
-          {rainbowColorWheel(this.props.currentBand)}
-        </div>
+        <div className="ColorPicker-BandsParent">{array}</div>
       </div>
     );
   }
 }
 
 export default ColorPicker;
-
-// Returns array of JSX divs showing the color bands to click on
-function rainbowColorWheel(band) {
-  let array = []; // array to hold divs for each band
-  let style = {}; // Object to hold CSS for each band
-
-  let bandCount;
-  // Tolerance band has 8 only
-  if (band === 3) bandCount = 8;
-  else bandCount = 10; // All other bands have 10
-
-  for (let i = 0; i < bandCount; i++) {
-    // White text for black band
-    if (bandColor(band, i) === "black") {
-      style = {
-        backgroundColor: bandColor(band, i),
-        marginTop: "0%",
-        color: "white"
-      };
-    }
-    // typical color band style
-    else
-      style = {
-        backgroundColor: bandColor(band, i),
-        marginTop: "0%"
-      };
-    array.push(
-      <div style={style} className="ColorPicker-Band">
-        {bandContent(band, i)}
-      </div>
-    );
-  }
-  return array;
-}
 
 // Get the color of the band you desire
 function bandColor(bandNum, value) {
