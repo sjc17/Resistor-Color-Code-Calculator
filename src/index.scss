@@ -39,6 +39,7 @@ code {
     grid-column: 1 / 4;
     grid-row: 1;
   }
+  background: lightgrey;
 }
 
 .ColorPicker {
@@ -64,6 +65,18 @@ code {
     height: 9%;
     @if background-color == 50 {
       color: white;
+    }
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome and Opera */
+
+    &:hover {
+      cursor: pointer;
     }
   }
 }
@@ -209,13 +222,12 @@ code {
 
       width: 100%;
       height: 75%;
+    }
 
-      .ColorPickerBand {
-        display: relative;
-
-        width: 10%;
-        height: 100%;
-      }
+    &-Band {
+      display: relative;
+      width: 10%;
+      height: 100%;
     }
   }
 }

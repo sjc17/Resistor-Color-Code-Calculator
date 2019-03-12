@@ -1,95 +1,17 @@
 import React, { Component } from "react";
+import rMath from "./resistancestringmath";
 
 const validUserInputRegEx = /^\d*\.?\d*[mkM]?$/; // Regex to check that input is a valid decimal number
-
 // Render resistor display and enable selecting bands
 class ResistorDisplay extends Component {
-  getMultiplier(number) {
-    // Two digit bands
-    if (this.props.numOfBands <= 4) {
-      if (number >= Math.pow(10, 8)) return 7;
-      else if (number >= Math.pow(10, 7)) return 6;
-      else if (number >= Math.pow(10, 6)) return 5;
-      else if (number >= Math.pow(10, 5)) return 4;
-      else if (number >= Math.pow(10, 4)) return 3;
-      else if (number >= Math.pow(10, 3)) return 2;
-      else if (number >= Math.pow(10, 2)) return 1;
-      else if (number >= Math.pow(10, 1)) return 0;
-      else if (number >= 1) return 0.1;
-      else if (number > 0) return 0.01;
-      else return 0;
-    }
-    // Three digit bands
-    else {
-      if (number >= Math.pow(10, 9)) return 7;
-      else if (number >= Math.pow(10, 8)) return 6;
-      else if (number >= Math.pow(10, 7)) return 5;
-      else if (number >= Math.pow(10, 6)) return 4;
-      else if (number >= Math.pow(10, 5)) return 3;
-      else if (number >= Math.pow(10, 4)) return 2;
-      else if (number >= Math.pow(10, 3)) return 1;
-      else if (number >= Math.pow(10, 2)) return 0;
-      else if (number >= Math.pow(10, 1)) return 0.1;
-      else if (number > 0) return 0.01;
-      else return 0;
-    }
-  }
-  getFirstDigit(number) {
-    const multiplier = this.getMultiplier(number);
-    let index;
-    if (number === 0) return 0;
-    if (this.props.numOfBands <= 4) {
-      if (multiplier !== 0.01) index = 0;
-      else if (number >= 1) index = 0;
-      else if (number > 0) index = 2;
-      else return 0;
-    } else {
-      index = 0;
-    }
-    return parseInt(number.toString().substr(index, 1));
-  }
-
-  getSecondDigit(number) {
-    const multiplier = this.getMultiplier(number);
-    let index;
-    // Two digit bands
-    if (this.props.numOfBands <= 4) {
-      if (multiplier !== 0.1 && multiplier !== 0.01) {
-        if (number >= 100) index = 1;
-        else index = 1;
-      } else if (multiplier === 0.1) index = 2;
-      else if (multiplier === 0.01) index = 3;
-      else return 0;
-    }
-    // Three digit bands
-    else {
-      if (multiplier !== 0.1 && multiplier !== 0.01) {
-        if (number >= 1000) index = 2;
-        else index = 1;
-      } else if (multiplier === 0.1) {
-        index = 1;
-      } else index = 2;
-    }
-    return parseInt(number.toString().substr(index, 1));
-  }
-  getThirdDigit(number) {
-    const multiplier = this.getMultiplier(number);
-    let index;
-    // Three digit bands
-    if (number >= 1000) index = 3;
-    else if (multiplier !== 0.1 && multiplier !== 0.01) index = 2;
-    else if (multiplier === 0.1) index = 3;
-    else if (number >= 1) index = 3;
-    else if (number > 0) index = 3;
-    else return 0;
-    return parseInt(number.toString().substr(index, 1));
-  }
   render() {
     // Code to remove whitespace is repeated here to fix a bug with this component showing whitespace anyways
     const resistanceString = this.props.value.replace(/\s/g, "");
     let actualResistance = 0;
     if (resistanceString.match(validUserInputRegEx)) {
-      actualResistance = parseFloat(parseSIPrefix(resistanceString)).toFixed(2);
+      actualResistance = parseFloat(
+        rMath.parseSIPrefix(resistanceString)
+      ).toFixed(2);
       // Check that the resistance value is valid
       if (
         actualResistance >= 0.01 &&
@@ -117,7 +39,7 @@ class ResistorDisplay extends Component {
             style={{
               backgroundColor: bandColor(
                 0,
-                this.getFirstDigit(actualResistance)
+                rMath.getDigit(actualResistance, this.props.numOfBands, 0)
               )
             }}
             onClick={() => {
@@ -130,7 +52,7 @@ class ResistorDisplay extends Component {
             style={{
               backgroundColor: bandColor(
                 1,
-                this.getSecondDigit(actualResistance)
+                rMath.getDigit(actualResistance, this.props.numOfBands, 1)
               )
             }}
             onClick={() => {
@@ -144,7 +66,7 @@ class ResistorDisplay extends Component {
               style={{
                 backgroundColor: bandColor(
                   2,
-                  this.getMultiplier(actualResistance)
+                  rMath.getMultiplier(actualResistance, this.props.numOfBands)
                 )
               }}
               onClick={() => {
@@ -169,7 +91,7 @@ class ResistorDisplay extends Component {
               style={{
                 backgroundColor: bandColor(
                   4,
-                  this.getThirdDigit(actualResistance)
+                  rMath.getDigit(actualResistance, this.props.numOfBands, 2)
                 )
               }}
               onClick={() => {
@@ -182,7 +104,6 @@ class ResistorDisplay extends Component {
     );
   }
 }
-
 function bandColor(bandNum, value) {
   let color = "";
   switch (bandNum) {
@@ -295,27 +216,6 @@ function bandColor(bandNum, value) {
       break;
   }
   return color;
-}
-
-function parseSIPrefix(resistanceString) {
-  let actualResistance;
-  if (resistanceString.match(validUserInputRegEx)) {
-    switch (resistanceString.substr(-1)) {
-      case "k":
-        actualResistance = parseFloat(resistanceString.slice(0, -1)) * 1000;
-        break;
-      case "m":
-        actualResistance = parseFloat(resistanceString.slice(0, -1)) / 1000;
-        break;
-      case "M":
-        actualResistance = parseFloat(resistanceString.slice(0, -1)) * 1000000;
-        break;
-      default:
-        actualResistance = parseFloat(resistanceString);
-        break;
-    }
-  }
-  return actualResistance;
 }
 
 export default ResistorDisplay;

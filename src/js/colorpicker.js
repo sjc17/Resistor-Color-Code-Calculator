@@ -30,20 +30,27 @@ class ColorPicker extends Component {
 
 export default ColorPicker;
 
+// Returns array of JSX divs showing the color bands to click on
 function rainbowColorWheel(band) {
-  let array = [];
-  let style = {};
+  let array = []; // array to hold divs for each band
+  let style = {}; // Object to hold CSS for each band
+
   let bandCount;
+  // Tolerance band has 8 only
   if (band === 3) bandCount = 8;
-  else bandCount = 10;
+  else bandCount = 10; // All other bands have 10
+
   for (let i = 0; i < bandCount; i++) {
+    // White text for black band
     if (bandColor(band, i) === "black") {
       style = {
         backgroundColor: bandColor(band, i),
         marginTop: "0%",
         color: "white"
       };
-    } else
+    }
+    // typical color band style
+    else
       style = {
         backgroundColor: bandColor(band, i),
         marginTop: "0%"
@@ -57,6 +64,7 @@ function rainbowColorWheel(band) {
   return array;
 }
 
+// Get the color of the band you desire
 function bandColor(bandNum, value) {
   let color = "";
   switch (bandNum) {
@@ -174,6 +182,7 @@ function bandColor(bandNum, value) {
   return color;
 }
 
+// Get the text inside each band
 function bandContent(bandNum, value) {
   let content = "";
   switch (bandNum) {
