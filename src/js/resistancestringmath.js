@@ -12,8 +12,8 @@ const funcs = {
       else if (number >= Math.pow(10, 3)) return 2;
       else if (number >= Math.pow(10, 2)) return 1;
       else if (number >= Math.pow(10, 1)) return 0;
-      else if (number >= 1) return 0.1;
-      else if (number > 0) return 0.01;
+      else if (number >= 1) return -1;
+      else if (number > 0) return -2;
       else return 0;
     }
     // Three digit bands
@@ -26,8 +26,8 @@ const funcs = {
       else if (number >= Math.pow(10, 4)) return 2;
       else if (number >= Math.pow(10, 3)) return 1;
       else if (number >= Math.pow(10, 2)) return 0;
-      else if (number >= Math.pow(10, 1)) return 0.1;
-      else if (number > 0) return 0.01;
+      else if (number >= Math.pow(10, 1)) return -1;
+      else if (number > 0) return -2;
       else return 0;
     }
   },
@@ -56,7 +56,7 @@ const funcs = {
     let index;
     if (number === 0) return 0;
     if (bandCount <= 4) {
-      if (multiplier !== 0.01 || number >= 1) index = 0;
+      if (multiplier !== -2 || number >= 1) index = 0;
       else if (number > 0) index = 2;
       else return 0;
     } else {
@@ -70,7 +70,7 @@ const funcs = {
     let index;
     // Two digit bands
     if (bandCount <= 4) {
-      if (multiplier !== 0.1 && multiplier !== 0.01) {
+      if (multiplier !== -1 && multiplier !== -2) {
         index = 1;
       } else if (multiplier === 0.1) index = 2;
       else if (multiplier === 0.01) index = 3;
@@ -78,7 +78,7 @@ const funcs = {
     }
     // Three digit bands
     else {
-      if (multiplier !== 0.01) {
+      if (multiplier !== -2) {
         index = 1;
       } else index = 2;
     }
@@ -89,7 +89,7 @@ const funcs = {
     const multiplier = this.getMultiplier(number, bandCount);
     let index;
     // Three digit bands
-    if (multiplier !== 0.1 && multiplier !== 0.01) index = 2;
+    if (multiplier !== -1 && multiplier !== -2) index = 2;
     else if (number > 0) index = 3;
     else return 0;
     return index;

@@ -34,12 +34,41 @@ class App extends Component {
     this.setState({ currentBand: value });
   }
   handleColorSelect(value) {
-    const newResistance = RMath.replaceDigit(
-      this.state.resistance,
-      this.state.numOfBands,
-      this.state.currentBand,
-      value
-    );
+    let newResistance;
+    let multiplyFactor;
+    console.log(value);
+    if (
+      this.state.currentBand === 0 ||
+      this.state.currentBand === 1 ||
+      this.state.currentBand === 4
+    ) {
+      newResistance = RMath.replaceDigit(
+        this.state.resistance,
+        this.state.numOfBands,
+        this.state.currentBand,
+        value
+      );
+    } else if (this.state.currentBand === 2) {
+      if (value === 8) value = -1;
+      else if (value === 9) value = -2;
+
+      if (this.state.numOfBands <= 4) {
+        multiplyFactor = Math.pow(
+          10,
+          value - RMath.getMultiplier(this.state.resistance) - 1
+        );
+      } else {
+        multiplyFactor = Math.pow(
+          10,
+          value - RMath.getMultiplier(this.state.resistance)
+        );
+      }
+
+      newResistance = (
+        parseFloat(this.state.resistance) * multiplyFactor
+      ).toString();
+    }
+
     this.setState({ resistance: newResistance });
   }
   render() {
